@@ -23,10 +23,10 @@ const (
 	totalLabel    = "Total"
 )
 
-func writeLogo(pdf *gopdf.GoPdf, logo string, from string) {
+func writeLogo(pdf *gopdf.GoPdf, logo string, from string, logoScale float64) {
 	if logo != "" {
 		width, height := getImageDimension(logo)
-		scaledWidth := 100.0
+		scaledWidth := logoScale
 		scaledHeight := float64(height) * scaledWidth / float64(width)
 		_ = pdf.Image(logo, pdf.GetX(), pdf.GetY(), &gopdf.Rect{W: scaledWidth, H: scaledHeight})
 		pdf.Br(scaledHeight + 24)

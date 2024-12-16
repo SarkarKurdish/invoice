@@ -24,6 +24,7 @@ type Invoice struct {
 	Title string `json:"title" yaml:"title"`
 
 	Logo string `json:"logo" yaml:"logo"`
+	LogoScale float64 `json:"logoScale" yaml:"logoScale"`
 	From string `json:"from" yaml:"from"`
 	To   string `json:"to" yaml:"to"`
 	Date string `json:"date" yaml:"date"`
@@ -44,6 +45,7 @@ func DefaultInvoice() Invoice {
 	return Invoice{
 		Id:         time.Now().Format("20060102"),
 		Title:      "INVOICE",
+		LogoScale:  100.0,
 		Rates:      []float64{25},
 		Quantities: []int{2},
 		Items:      []string{"Paper Cranes"},
@@ -87,6 +89,7 @@ func init() {
 
 	generateCmd.Flags().StringVarP(&file.Note, "note", "n", "", "Note")
 	generateCmd.Flags().StringVarP(&output, "output", "o", "invoice.pdf", "Output file (.pdf)")
+	generateCmd.Flags().Float64Var(&file.LogoScale, "logoScale", defaultInvoice.LogoScale, "Logo scale (default 100)")
 
 	flag.Parse()
 }
@@ -126,7 +129,7 @@ var generateCmd = &cobra.Command{
 			return err
 		}
 
-		writeLogo(&pdf, file.Logo, file.From)
+		writeLogo(&pdf, file.Logo, file.From, file.LogoScale)
 		writeTitle(&pdf, file.Title, file.Id, file.Date)
 		writeBillTo(&pdf, file.To)
 		writeHeaderRow(&pdf)
